@@ -1,12 +1,12 @@
 import React from 'react';
 
-import Router from './Router';
+import Home from './scenes/Home';
 
 import './app.css';
 
 const App = () => (
   <div>
-    <Router />
+    <Home />
   </div>
 );
 

@@ -1,5 +1,6 @@
 export * from './Audio';
 export * from './BlockQuote';
+export * from './Carousel';
 export * from './Indent';
 export * from './Layout';
 export * from './Nav';

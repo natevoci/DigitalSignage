@@ -4,6 +4,9 @@ import styled from '@emotion/styled';
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
+  width: 1920px;
+  height: 1080px;
+  background: #000;
 `;
 
 const NavWrapper = styled.div`

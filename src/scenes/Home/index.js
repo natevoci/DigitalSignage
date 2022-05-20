@@ -7,28 +7,25 @@ const Column = styled.div`
   position: relative;
 `;
 
-import { Layout, Carousel } from '../../ui';
+import { Layout } from '../../ui';
+import { Pane } from './Pane';
 
 export default () => {
   const query = new URLSearchParams(window.location.search);
-  const leftCategories = query.get('left')?.split(',')?.map(val => `https://digitalsignage.manninghamuc.org/${val}/feed/`);
-  const rightCategories = query.get('right')?.split(',')?.map(val => `https://digitalsignage.manninghamuc.org/${val}/feed/`);
+  const leftSources = query.get('left');
+  const rightSources = query.get('right');
 
   return (
     <Layout>
       <Column>
-        {leftCategories ? (
-          <Carousel
-            categories={leftCategories}
-          />
-        ) : null}
+        <Pane
+          sourceQuery={leftSources}
+        />
       </Column>
       <Column>
-        {rightCategories ? (
-          <Carousel
-            categories={rightCategories}
-          />
-        ) : null}
+        <Pane
+          sourceQuery={rightSources}
+        />
       </Column>
     </Layout>
   )

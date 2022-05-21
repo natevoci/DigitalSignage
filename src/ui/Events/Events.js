@@ -58,11 +58,11 @@ export const Events = ({
   dayOffset,
 }) => {
 
-  const events = useGoogleCalendarEvents({
+  const eventsToday = useGoogleCalendarEvents({
     calendarId,
     apiKey,
     dayOffset,
-  })
+  });
 
   const [currentTime, setCurrentTime] = React.useState(new Date());
   React.useEffect(
@@ -99,8 +99,8 @@ export const Events = ({
       })}</SubTitle>
 
       <EventsList>
-        {events.length ? (
-          events.map(event => (
+        {eventsToday.length ? (
+          eventsToday.map(event => (
             <EventRow
               key={event.etag}
             >

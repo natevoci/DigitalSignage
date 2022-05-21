@@ -3,7 +3,7 @@ import React from 'react';
 export const useGoogleCalendarEvents = ({
   calendarId,
   apiKey,
-  dayOffset = '0',
+  dayOffset,
   fetchInterval = 30000,
 } = {}) => {
   const [events, setEvents] = React.useState([]);
@@ -16,9 +16,8 @@ export const useGoogleCalendarEvents = ({
         console.log(`fetching events from ${calendarId}`)
         const dateStart = new Date();
         dateStart.setHours(0,0,0,0);
-        const offset = parseInt(dayOffset);
-        if (offset !== 0) {
-          dateStart.setDate(dateStart.getDate() + offset);
+        if (dayOffset !== 0) {
+          dateStart.setDate(dateStart.getDate() + dayOffset);
         }
 
         const dateEnd = new Date(dateStart);

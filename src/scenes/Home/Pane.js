@@ -19,8 +19,9 @@ export const Pane = ({
   }
 
   if (sourceType === 'events') {
-    const [calendarId, apiKey, dayOffset = '0'] = sourceDetails?.split(':') || [];
-    console.log({ sourceDetails, calendarId, apiKey });
+    const [calendarId, apiKey, offset = '0'] = sourceDetails?.split(':') || [];
+    const dayOffset = parseInt(offset);
+    console.log({ calendarId, apiKey, dayOffset });
 
     return (
       <Events

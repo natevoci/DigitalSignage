@@ -45,6 +45,13 @@ const EventSummary = styled.div`
   vertical-align: top;
 `;
 
+const NoEvents = styled.div`
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+  vertical-align: top;
+`;
+
 export const Events = ({
   calendarId,
   apiKey,
@@ -92,22 +99,30 @@ export const Events = ({
       })}</SubTitle>
 
       <EventsList>
-        {events.map(event => (
-          <EventRow
-            key={event.etag}
-          >
-            <EventDate>
-              {(new Date(event.start.dateTime)).toLocaleTimeString('en-AU', {
-                hour: 'numeric',
-                minute: 'numeric',
+        {events.length ? (
+          events.map(event => (
+            <EventRow
+              key={event.etag}
+            >
+              <EventDate>
+                {(new Date(event.start.dateTime)).toLocaleTimeString('en-AU', {
+                  hour: 'numeric',
+                  minute: 'numeric',
 
-              })}
-            </EventDate>
-            <EventSummary>
-              {event.summary}
-            </EventSummary>
+                })}
+              </EventDate>
+              <EventSummary>
+                {event.summary}
+              </EventSummary>
+            </EventRow>
+          ))
+        ) : (
+          <EventRow>
+            <NoEvents>
+              No events
+            </NoEvents>
           </EventRow>
-        ))}
+        )}
       </EventsList>
     </Wrapper>
   );

@@ -4,7 +4,10 @@ import styled from '@emotion/styled';
 import { useGoogleCalendarEvents } from './useGoogleCalendarEvents';
 
 const Wrapper = styled.div`
-  margin: 10px;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  overflow: hidden;
 `;
 
 const Title = styled.h1`
@@ -16,15 +19,15 @@ const SubTitle = styled.h3`
   text-align: center;
   font-size: 30px;
 
-  padding-bottom: 20px;
-  border-bottom: #fff 1px solid;
-  margin-bottom: 50px;
+  padding-bottom: 10px;
 `;
 
 const EventsList = styled.div`
-  margin-top: 10px;
-  font-size: 40px;
-  line-height: 50px;
+font-size: 40px;
+line-height: 50px;
+
+border-top: #fff 1px solid;
+padding-top: 20px;
 `;
 
 const EventRow = styled.div`
@@ -52,6 +55,11 @@ const NoEvents = styled.div`
   vertical-align: top;
 `;
 
+const Tomorrow = styled.div`
+  margin-top: 40px;
+  opacity: ${p => p.$visible ? '1' : '0'}
+`;
+
 export const Events = ({
   calendarId,
   apiKey,
@@ -62,6 +70,12 @@ export const Events = ({
     calendarId,
     apiKey,
     dayOffset,
+  });
+
+  const eventsTomorrow = useGoogleCalendarEvents({
+    calendarId,
+    apiKey,
+    dayOffset: dayOffset + 1,
   });
 
   const [currentTime, setCurrentTime] = React.useState(new Date());
@@ -86,6 +100,20 @@ export const Events = ({
     [],
   );
 
+  const [tomorrowVisible, setTomorrowVisible] = React.useState(true);
+  const tomorrowRef = React.useRef(null);
+  React.useLayoutEffect(
+    () => {
+      if (tomorrowRef.current) {
+        const top = tomorrowRef.current.offsetTop;
+        const visible = top <= 1080 * .80;
+        console.log({ visible });
+        setTomorrowVisible(visible);
+      }
+    },
+    [tomorrowRef.current, eventsToday],
+  );
+
   return (
     <Wrapper>
       <Title>Today's events</Title>
@@ -98,33 +126,48 @@ export const Events = ({
         minute: 'numeric',
       })}</SubTitle>
 
-      <EventsList>
-        {eventsToday.length ? (
-          eventsToday.map(event => (
-            <EventRow
-              key={event.etag}
-            >
-              <EventDate>
-                {(new Date(event.start.dateTime)).toLocaleTimeString('en-AU', {
-                  hour: 'numeric',
-                  minute: 'numeric',
+      {renderEventList(eventsToday)}
 
-                })}
-              </EventDate>
-              <EventSummary>
-                {event.summary}
-              </EventSummary>
-            </EventRow>
-          ))
-        ) : (
-          <EventRow>
-            <NoEvents>
-              No events
-            </NoEvents>
-          </EventRow>
-        )}
-      </EventsList>
+      {eventsTomorrow.length ? (
+        <Tomorrow
+          ref={tomorrowRef}
+          $visible={tomorrowVisible}
+        >
+          <Title>Tomorrow</Title>
+          {renderEventList(eventsTomorrow)}
+        </Tomorrow>
+      ) : null}
     </Wrapper>
   );
 };
 
+const renderEventList = (events) => {
+  return (
+    <EventsList>
+      {events.length ? (
+        events.map(event => (
+          <EventRow
+            key={event.etag}
+          >
+            <EventDate>
+              {(new Date(event.start.dateTime)).toLocaleTimeString('en-AU', {
+                hour: 'numeric',
+                minute: 'numeric',
+
+              })}
+            </EventDate>
+            <EventSummary>
+              {event.summary}
+            </EventSummary>
+          </EventRow>
+        ))
+      ) : (
+        <EventRow>
+          <NoEvents>
+            No events
+          </NoEvents>
+        </EventRow>
+      )}
+    </EventsList>
+  );
+}

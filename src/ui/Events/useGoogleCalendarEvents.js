@@ -37,12 +37,12 @@ export const useGoogleCalendarEvents = ({
         const eventsJSON = await eventsResponse.json();
       
         const events = eventsJSON.items
-          .filter(event => event.status === 'confirmed')
           .map(event => ({
             ...event,
             startDate: new Date(event.start.dateTime),
             endDate: new Date(event.end.dateTime),
           }))
+          .filter(event => event.status === 'confirmed' && event.startDate >= dateStart)
           .sort((a, b) => a.startDate - b.startDate);
   
         if (JSON.stringify(latestEvents) !== JSON.stringify(events)) {

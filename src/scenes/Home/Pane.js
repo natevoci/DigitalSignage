@@ -1,11 +1,13 @@
 import React from 'react';
 
-import { Carousel } from '../../ui';
+import { Carousel, Events } from '../../ui';
 
 export const Pane = ({
   sourceQuery
 }) => {
-  const [sourceType, sourceDetails] = sourceQuery.split(':', 2);
+  const [sourceType, ...sourceDetailsArray] = sourceQuery.split(':');
+  const sourceDetails = sourceDetailsArray.join(':');
+  console.log({ sourceType, sourceDetailsArray, sourceDetails });
   if (sourceType === 'category') {
     const sources = sourceDetails?.split(',')?.map(val => `https://digitalsignage.manninghamuc.org/category/${val}/feed/`);
 
@@ -17,7 +19,16 @@ export const Pane = ({
   }
 
   if (sourceType === 'events') {
-    return 'Google calendar';
+    const [calendarId, apiKey, dayOffset = '0'] = sourceDetails?.split(':') || [];
+    console.log({ sourceDetails, calendarId, apiKey });
+
+    return (
+      <Events
+        calendarId={calendarId}
+        apiKey={apiKey}
+        dayOffset={dayOffset}
+      />
+    );
   }
 
   return null;

@@ -3,6 +3,9 @@ import styled from '@emotion/styled';
 
 import { useGoogleCalendarEvents } from './useGoogleCalendarEvents';
 
+const colorWhite = '#fff';
+const colorGrey = '#939ab3';
+
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
@@ -26,12 +29,14 @@ const EventsList = styled.div`
 font-size: 40px;
 line-height: 50px;
 
-border-top: #fff 1px solid;
+color: ${p => p.$color};
+border-top: ${p => p.$color} 1px solid;
 padding-top: 20px;
 `;
 
 const EventRow = styled.div`
   margin: 10px 0;
+  color: ${p => p.$past ? colorGrey : 'inherit'};
 `;
 
 const EventDate = styled.div`
@@ -57,13 +62,15 @@ const NoEvents = styled.div`
 
 const Tomorrow = styled.div`
   margin-top: 40px;
-  opacity: ${p => p.$visible ? '1' : '0'}
+  opacity: ${p => p.$visible ? '1' : '0'};
+  color: ${colorGrey};
 `;
 
 export const Events = ({
   calendarId,
   apiKey,
   dayOffset,
+  timeOffsetMinutes = 0,
 }) => {
 
   const eventsToday = useGoogleCalendarEvents({
@@ -78,13 +85,16 @@ export const Events = ({
     dayOffset: dayOffset + 1,
   });
 
-  const [currentTime, setCurrentTime] = React.useState(new Date());
+  const getNow = () => new Date((new Date()).getTime() + timeOffsetMinutes*60000);
+
+  const [currentTime, setCurrentTime] = React.useState(getNow());
+  console.log(currentTime);
   React.useEffect(
     () => {
       let time = currentTime;
       const handle = setInterval(
         () => {
-          const now = new Date();
+          const now = getNow();
           if (now.getMinutes() !== time.getMinutes()) {
             time = now;
             setCurrentTime(now);
@@ -126,7 +136,7 @@ export const Events = ({
         minute: 'numeric',
       })}</SubTitle>
 
-      {renderEventList(eventsToday)}
+      {renderEventList(eventsToday, currentTime, colorWhite)}
 
       {eventsTomorrow.length ? (
         <Tomorrow
@@ -134,23 +144,26 @@ export const Events = ({
           $visible={tomorrowVisible}
         >
           <Title>Tomorrow</Title>
-          {renderEventList(eventsTomorrow)}
+          {renderEventList(eventsTomorrow, currentTime, colorGrey)}
         </Tomorrow>
       ) : null}
     </Wrapper>
   );
 };
 
-const renderEventList = (events) => {
+const renderEventList = (events, currentTime, color) => {
   return (
-    <EventsList>
+    <EventsList
+      $color={color}
+    >
       {events.length ? (
         events.map(event => (
           <EventRow
             key={event.etag}
+            $past={event.endDate < currentTime}
           >
             <EventDate>
-              {(new Date(event.start.dateTime)).toLocaleTimeString('en-AU', {
+              {event.startDate.toLocaleTimeString('en-AU', {
                 hour: 'numeric',
                 minute: 'numeric',
 

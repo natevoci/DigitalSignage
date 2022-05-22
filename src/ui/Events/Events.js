@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { useGoogleCalendarEvents } from './useGoogleCalendarEvents';
 
 const colorWhite = '#fff';
-const colorGrey = '#939ab3';
+const colorGrey = '#b1b3bb';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -73,22 +73,23 @@ export const Events = ({
   timeOffsetMinutes = 0,
 }) => {
 
+  const getNow = () => new Date((new Date()).getTime() + timeOffsetMinutes*60000);
+  const [currentTime, setCurrentTime] = React.useState(getNow());
+
   const eventsToday = useGoogleCalendarEvents({
     calendarId,
     apiKey,
     dayOffset,
+    currentTime,
   });
 
   const eventsTomorrow = useGoogleCalendarEvents({
     calendarId,
     apiKey,
     dayOffset: dayOffset + 1,
+    currentTime,
   });
 
-  const getNow = () => new Date((new Date()).getTime() + timeOffsetMinutes*60000);
-
-  const [currentTime, setCurrentTime] = React.useState(getNow());
-  console.log(currentTime);
   React.useEffect(
     () => {
       let time = currentTime;
@@ -110,37 +111,67 @@ export const Events = ({
     [],
   );
 
+  const [hiddenEventCount, setHiddenEventCount] = React.useState(0);
+
+  const visibleEvents = React.useMemo(
+    () => eventsToday.slice(hiddenEventCount),
+    [eventsToday, hiddenEventCount],
+  );
+
   const [tomorrowVisible, setTomorrowVisible] = React.useState(true);
-  const tomorrowRef = React.useRef(null);
+  const todayDivRef = React.useRef(null);
   React.useLayoutEffect(
     () => {
-      if (tomorrowRef.current) {
-        const top = tomorrowRef.current.offsetTop;
-        const visible = top <= 1080 * .80;
-        console.log({ visible });
+      if (todayDivRef.current) {
+        const bottom = todayDivRef.current.offsetTop + todayDivRef.current.offsetHeight;
+
+        const visible = bottom <= 1080 * .80;
         setTomorrowVisible(visible);
       }
     },
-    [tomorrowRef.current, eventsToday],
+    [todayDivRef.current, eventsToday],
+  );
+
+  React.useLayoutEffect(
+    () => {
+      if (todayDivRef.current) {
+        const bottom = todayDivRef.current.offsetTop + todayDivRef.current.offsetHeight;
+
+        if (bottom > 1080 && visibleEvents[0]?.isPast) {
+          setHiddenEventCount(hiddenEventCount + 1);
+        }
+      }
+    },
+    [todayDivRef.current, visibleEvents, hiddenEventCount],
+  )
+
+  React.useEffect(
+    () => {
+      setHiddenEventCount(0);
+    },
+    [eventsToday],
   );
 
   return (
     <Wrapper>
-      <Title>Today's events</Title>
-      <SubTitle>{currentTime.toLocaleString('en-AU', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-      })}</SubTitle>
+      <div
+        ref={todayDivRef}
+      >
+        <Title>Today's events</Title>
+        <SubTitle>{currentTime.toLocaleString('en-AU', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+        })}</SubTitle>
 
-      {renderEventList(eventsToday, currentTime, colorWhite)}
+        {renderEventList(visibleEvents, currentTime, colorWhite)}
+      </div>
 
       {eventsTomorrow.length ? (
         <Tomorrow
-          ref={tomorrowRef}
           $visible={tomorrowVisible}
         >
           <Title>Tomorrow</Title>
@@ -160,7 +191,7 @@ const renderEventList = (events, currentTime, color) => {
         events.map(event => (
           <EventRow
             key={event.etag}
-            $past={event.endDate < currentTime}
+            $past={event.isPast}
           >
             <EventDate>
               {event.startDate.toLocaleTimeString('en-AU', {

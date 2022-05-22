@@ -4,6 +4,7 @@ export const useGoogleCalendarEvents = ({
   calendarId,
   apiKey,
   dayOffset,
+  currentTime,
   fetchInterval = 30000,
 } = {}) => {
   const [events, setEvents] = React.useState([]);
@@ -40,6 +41,7 @@ export const useGoogleCalendarEvents = ({
             ...event,
             startDate: new Date(event.start.dateTime),
             endDate: new Date(event.end.dateTime),
+            isPast: (new Date(event.end.dateTime)) < currentTime,
           }))
           .filter(event => event.status === 'confirmed' && event.startDate >= dateStart)
           .sort((a, b) => a.startDate - b.startDate);

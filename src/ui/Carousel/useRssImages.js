@@ -56,7 +56,7 @@ const fetchImagesFromCategory = async ({
   category,
   defaultFadeInterval,
 }) => {
-  console.log(`fetching from ${category}`)
+  console.log(`fetching images from ${category}`)
   const rss = await fetch(category);
   const rssBody = await rss.text();
   const body = rssBody.replace(/\<\/link\>/g, ' </link>');

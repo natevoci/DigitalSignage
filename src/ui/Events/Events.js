@@ -69,7 +69,7 @@ const Tomorrow = styled.div`
 export const Events = ({
   calendarId,
   apiKey,
-  dayOffset,
+  dayOffset = 0,
   timeOffsetMinutes = 0,
 }) => {
 
@@ -93,10 +93,11 @@ export const Events = ({
   React.useEffect(
     () => {
       let time = currentTime;
+
       const handle = setInterval(
         () => {
           const now = getNow();
-          if (now.getMinutes() !== time.getMinutes()) {
+          if (now.getMinutes() !== time?.getMinutes?.()) {
             time = now;
             setCurrentTime(now);
           }
@@ -108,7 +109,14 @@ export const Events = ({
         clearInterval(handle);
       };
     },
-    [],
+    [timeOffsetMinutes],
+  );
+
+  React.useEffect(
+    () => {
+      setCurrentTime(getNow());
+    },
+    [timeOffsetMinutes],
   );
 
   const [hiddenEventCount, setHiddenEventCount] = React.useState(0);
@@ -137,7 +145,7 @@ export const Events = ({
       if (todayDivRef.current) {
         const bottom = todayDivRef.current.offsetTop + todayDivRef.current.offsetHeight;
 
-        if (bottom > 1080 && visibleEvents[0]?.isPast) {
+        if (bottom > 1080 && visibleEvents[0]?.event.endDate < currentTime) {
           setHiddenEventCount(hiddenEventCount + 1);
         }
       }
@@ -191,7 +199,7 @@ const renderEventList = (events, currentTime, color) => {
         events.map(event => (
           <EventRow
             key={event.etag}
-            $past={event.isPast}
+            $past={event.endDate < currentTime}
           >
             <EventDate>
               {event.startDate.toLocaleTimeString('en-AU', {

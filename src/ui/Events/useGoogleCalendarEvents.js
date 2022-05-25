@@ -27,7 +27,7 @@ export const useGoogleCalendarEvents = ({
         dateEnd,
       };
     },
-    [currentTime.toLocaleDateString()],
+    [currentTime.toDateString()],
   );
 
   React.useEffect(
@@ -66,6 +66,8 @@ export const useGoogleCalendarEvents = ({
   React.useEffect(
     () => {
       if (eventsJSON) {
+        console.log(`eventsJSON ${JSON.stringify(eventsJSON)}`);
+
         const events = eventsJSON
           .map(event => ({
             ...event,

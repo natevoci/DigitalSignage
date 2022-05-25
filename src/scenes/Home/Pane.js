@@ -10,7 +10,12 @@ export const Pane = ({
 
   const [sourceType, ...sourceDetailsArray] = sourceQuery.split(':');
   const sourceDetails = sourceDetailsArray.join(':');
-  console.log({ sourceType, sourceDetailsArray, sourceDetails, timeOffsetMinutesManual });
+  console.log(JSON.stringify({
+    sourceType,
+    sourceDetailsArray,
+    sourceDetails,
+    timeOffsetMinutesManual,
+  }));
 
   if (sourceType === 'category') {
     const sources = sourceDetails?.split(',')?.map(val => `https://digitalsignage.manninghamuc.org/category/${val}/feed/`);

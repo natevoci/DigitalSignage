@@ -160,20 +160,15 @@ export const Events = ({
     [eventsToday],
   );
 
+  const currentTimeString = toLocaleString(currentTime)
+
   return (
     <Wrapper>
       <div
         ref={todayDivRef}
       >
         <Title>Today's events</Title>
-        <SubTitle>{currentTime.toLocaleString('en-AU', {
-          weekday: 'long',
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          hour: 'numeric',
-          minute: 'numeric',
-        })}</SubTitle>
+        <SubTitle>{currentTimeString}</SubTitle>
 
         {renderEventList(visibleEvents, currentTime, colorWhite)}
       </div>
@@ -202,11 +197,7 @@ const renderEventList = (events, currentTime, color) => {
             $past={event.endDate < currentTime}
           >
             <EventDate>
-              {event.startDate.toLocaleTimeString('en-AU', {
-                hour: 'numeric',
-                minute: 'numeric',
-
-              })}
+              {toLocaleTimeString(event.startDate)}
             </EventDate>
             <EventSummary>
               {event.summary}
@@ -223,3 +214,25 @@ const renderEventList = (events, currentTime, color) => {
     </EventsList>
   );
 }
+
+const toLocaleTimeString = (date) => {
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+  let ampm = hours >= 12 ? 'pm' : 'am';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? '0'+minutes : minutes;
+
+  return `${hours}:${minutes} ${ampm}`;
+};
+
+const toLocaleDateString = (date) => {
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+  return `${days[date.getDay()]}, ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+};
+
+const toLocaleString = (date) => {
+  return `${toLocaleDateString(date)}, ${toLocaleTimeString(date)}`;
+};

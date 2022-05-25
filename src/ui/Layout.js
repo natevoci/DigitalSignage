@@ -6,7 +6,7 @@ const Wrapper = styled.div`
   flex-direction: row;
   width: 1920px;
   height: 1080px;
-  background: #000;
+  background: #003D4C;
 `;
 
 const NavWrapper = styled.div`

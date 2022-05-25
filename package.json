@@ -2,6 +2,9 @@
   "name": "brightsign.spa",
   "version": "1.0.0",
   "license": "MIT",
+  "browserslist": [
+    "ie 11"
+  ],
   "scripts": {
     "start": "parcel ./src/index.html",
     "build": "parcel build --no-optimize ./src/index.html"

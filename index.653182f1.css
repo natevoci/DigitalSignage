@@ -8,7 +8,7 @@ body {
   color: #fff;
   letter-spacing: .5px;
   -webkit-font-smoothing: antialiased;
-  background: #4c4c4c;
+  background: #000;
   font-family: Roboto, Helvetica, Arial, sans-serif;
   line-height: 20px;
 }
@@ -59,4 +59,4 @@ ul {
   margin-bottom: 0;
 }
 
-/*# sourceMappingURL=index.d7dee7ad.css.map */
+/*# sourceMappingURL=index.653182f1.css.map */

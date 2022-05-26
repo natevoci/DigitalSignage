@@ -3,7 +3,7 @@ import React from 'react';
 export const useRssImages = ({
   categories = ['https://digitalsignage.manninghamuc.org/ads/feed/'],
   fetchInterval = 30000,
-  defaultFadeInterval = 5,
+  defaultFadeInterval = 15,
 } = {}) => {
   const [images, setImages] = React.useState([]);
 

@@ -56,7 +56,6 @@ const fetchImagesFromCategory = async ({
   category,
   defaultFadeInterval,
 }) => {
-  console.log(`fetching images from ${category}`)
   const rss = await fetch(category);
   const rssBody = await rss.text();
   const body = rssBody.replace(/\<\/link\>/g, ' </link>');
@@ -69,6 +68,8 @@ const fetchImagesFromCategory = async ({
     src: docImage.attributes['srcset'].value.split(',').pop().trim().split(' ').shift(),
     fadeInterval: parseInt(docImage.attributes['alt'].value || `${defaultFadeInterval}`),
   }));
+
+  console.log(`fetched ${images.length} images from ${category}`);
 
   return images;
 };

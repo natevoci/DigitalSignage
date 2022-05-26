@@ -41,7 +41,7 @@ export const useGoogleCalendarEvents = ({
         ];
 
         const fetchURL = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?${query.join('&')}`;
-        console.log(`Fetching events from ${calendarId}`, { fetchURL });
+        console.log(`Fetching events from ${calendarId} for day ${dayOffset + 1} - ${fetchURL}`);
 
         const eventsResponse = await fetch(fetchURL);
         const eventsJSON = await eventsResponse.json();

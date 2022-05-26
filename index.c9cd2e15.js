@@ -3441,14 +3441,13 @@ var $4b1578d4f25c8fe8$var$fetchImagesFromCategory = function() {
             while(1)switch(_ctx.prev = _ctx.next){
                 case 0:
                     category = param.category, defaultFadeInterval = param.defaultFadeInterval;
-                    console.log("fetching images from ".concat(category));
-                    _ctx.next = 4;
+                    _ctx.next = 3;
                     return fetch(category);
-                case 4:
+                case 3:
                     rss = _ctx.sent;
-                    _ctx.next = 7;
+                    _ctx.next = 6;
                     return rss.text();
-                case 7:
+                case 6:
                     rssBody = _ctx.sent;
                     body = rssBody.replace(/\<\/link\>/g, ' </link>');
                     domParser = new DOMParser();
@@ -3460,6 +3459,7 @@ var $4b1578d4f25c8fe8$var$fetchImagesFromCategory = function() {
                             fadeInterval: parseInt(docImage.attributes['alt'].value || "".concat(defaultFadeInterval))
                         };
                     });
+                    console.log("fetched ".concat(images.length, " images from ").concat(category));
                     return _ctx.abrupt("return", images);
                 case 14:
                 case "end":
@@ -4375,9 +4375,7 @@ var $95599a70c6a12d2a$export$ef8ef9b3c2944f2d = function() {
                                 "singleEvents=True", 
                             ];
                             fetchURL = "https://www.googleapis.com/calendar/v3/calendars/".concat(calendarId, "/events?").concat(query.join('&'));
-                            console.log("Fetching events from ".concat(calendarId), {
-                                fetchURL: fetchURL
-                            });
+                            console.log("Fetching events from ".concat(calendarId, " for day ").concat(dayOffset + 1, " - ").concat(fetchURL));
                             _ctx.next = 5;
                             return fetch(fetchURL);
                         case 5:
@@ -11741,4 +11739,4 @@ var $f5ad3b556efb6367$export$fd2e1a4921eb839b = function(param) {
 
 parcelRequire("bTHNm");
 })();
-//# sourceMappingURL=index.6858b023.js.map
+//# sourceMappingURL=index.c9cd2e15.js.map

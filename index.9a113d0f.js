@@ -4229,7 +4229,7 @@ var $22788e06f49508b0$export$ada873a34909da65 = function(param) {
         if (todayDivRef.current) {
             var ref;
             var bottom = todayDivRef.current.offsetTop + todayDivRef.current.offsetHeight;
-            if (bottom > 1080 && ((ref = visibleEvents[0]) === null || ref === void 0 ? void 0 : ref.event.endDate) < currentTime) setHiddenEventCount(hiddenEventCount + 1);
+            if (bottom > 1080 && ((ref = visibleEvents[0]) === null || ref === void 0 ? void 0 : ref.endDate) < currentTime) setHiddenEventCount(hiddenEventCount + 1);
         }
     }, [
         todayDivRef.current,
@@ -11740,4 +11740,4 @@ var $8b7e196a9bbb6d99$export$fd2e1a4921eb839b = function(param) {
 
 parcelRequire("4qPOo");
 
-//# sourceMappingURL=index.ae764ed8.js.map
+//# sourceMappingURL=index.9a113d0f.js.map

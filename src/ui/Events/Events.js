@@ -145,7 +145,7 @@ export const Events = ({
       if (todayDivRef.current) {
         const bottom = todayDivRef.current.offsetTop + todayDivRef.current.offsetHeight;
 
-        if (bottom > 1080 && visibleEvents[0]?.event.endDate < currentTime) {
+        if (bottom > 1080 && visibleEvents[0]?.endDate < currentTime) {
           setHiddenEventCount(hiddenEventCount + 1);
         }
       }
